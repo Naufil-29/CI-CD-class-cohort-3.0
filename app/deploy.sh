@@ -22,7 +22,19 @@ npm install
 npm run build
 
 # Stop the previous Next.js process if one is already running.
-pkill -f "next start" || true
+pkill -f "node_modules/next/dist/bin/next start" || true
 
-# Start the app in the background so the GitHub Action can finish.
-nohup npm run start > app.log 2>&1 &
+APP_DIR="$HOME/ci-cd-110xdevs"
+APP_LOG="$APP_DIR/app.log"
+NODE_BIN="$HOME/.nvm/versions/node/v24.15.0/bin"
+
+# Start the app detached from the SSH session so GitHub Actions can finish cleanly.
+setsid env PATH="$NODE_BIN:$PATH" sh -c "cd $APP_DIR && nohup npm run start > $APP_LOG 2>&1 < /dev/null &" >/dev/null 2>&1
+
+sleep 5
+
+if ! pgrep -f "node_modules/next/dist/bin/next start" >/dev/null 2>&1; then
+  echo "App failed to stay running after deploy."
+  tail -n 50 "$APP_LOG" || true
+  exit 1
+fi

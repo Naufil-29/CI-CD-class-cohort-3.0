@@ -11,6 +11,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Execute remote SSH commands
         uses: appleboy/ssh-action@v1.2.0
         with:
@@ -18,5 +21,5 @@ jobs:
           username: ubuntu
           key: ${{ secrets.PRIVATE_SSH_KEY }}
           port: 22
-          script: app/deploy.sh
+          script_path: app/deploy.sh
             

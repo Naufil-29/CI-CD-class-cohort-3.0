@@ -20,4 +20,9 @@ fi
 git pull origin main
 npm install
 npm run build
-npm run start
+
+# Stop the previous Next.js process if one is already running.
+pkill -f "next start" || true
+
+# Start the app in the background so the GitHub Action can finish.
+nohup npm run start > app.log 2>&1 &

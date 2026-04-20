@@ -21,4 +21,9 @@ jobs:
           username: ubuntu
           key: ${{ secrets.PRIVATE_SSH_KEY }}
           port: 22
-          script: whoami
+          script: |
+          cd CI-CD-class-cohort-3.0
+          git pull
+          npm install
+          npm run build
+          npm run start

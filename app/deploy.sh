@@ -8,7 +8,7 @@ fi
 
 # GitHub SSH actions often use a non-interactive shell, so PATH from
 # ~/.bashrc may not be available. Add the Node.js bin path explicitly.
-export PATH="/home/ubuntu/.nvm/versions/node/v24.15.0/bin/npm"
+export PATH="$HOME/.nvm/versions/node/v24.15.0/bin:$PATH"
 
 cd ~/ci-cd-110xdevs
 

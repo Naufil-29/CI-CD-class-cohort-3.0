@@ -12,18 +12,25 @@ jobs:
 
     steps:
       - name: Checkout the code
-        uses: actions/checkout@v1.2.0
+        uses: actions/checkout@v4
 
-      - name: Execute remote SSH commands using password
-        uses: appleboy/ssh-action@v1
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Execute remote SSH commands
+        uses: appleboy/ssh-action@v1.2.0
         with:
           host: 51.21.168.37
           username: ubuntu
           key: ${{ secrets.PRIVATE_SSH_KEY }}
           port: 22
           script: |
-          cd CI-CD-class-cohort-3.0
-          git pull
-          npm install
-          npm run build
-          npm run start
+            set -e
+            cd ~/CI-CD-class-cohort-3.0
+            git pull origin main
+            npm install
+            npm run build
+            pkill -f "next start" || true
+            nohup npm run start > app.log 2>&1 &
